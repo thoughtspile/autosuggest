@@ -1,11 +1,24 @@
 import React from 'react';
+import Autocomplete from './Autocopmlete';
+import suggestService from '../services/suggest';
 
 export default class App extends React.Component {
+  constructor(p, c) {
+    super(p, c);
+    this.state = { search: '' };
+  }
+
+  search(search) {
+    this.setState({ search });
+    suggestService.search(search);
+  }
+  
   render() {
-    return (
-      <div id="content">
-        <h5>Time to <a href="https://facebook.github.io/react/">React</a>.</h5>
-      </div>
-    );
+    const { search } = this.state;
+    return <Autocomplete 
+      value={search} 
+      items={suggestService.cache[search]} 
+      suggest={qs => this.search(qs)}
+    />;
   }
 }
