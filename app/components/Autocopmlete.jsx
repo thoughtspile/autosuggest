@@ -26,6 +26,12 @@ class Autocomplete extends React.PureComponent {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.items[0] && this.state.activeHintIndex < 0) {
+      this.setState({ activeHintIndex: 0 });
+    }
+  }
+
   activateHint(index) {
     this.setState({ activeHintIndex: index % this.props.items.length });
   }
@@ -84,11 +90,11 @@ class Autocomplete extends React.PureComponent {
     const { value, suggest, items = [], fallback, inputProps, Item, itemsTitle } = this.props;
     const { showHints, activeHintIndex } = this.state;
     const hintsVisible = showHints && (items.length > 0 || value);
+    const onSubmit = stopEvent(() => (showHints && activeHintIndex >= 0)
+      ? this.applyHint(activeHintIndex, true)
+      : this.submitText(value));
 
-    return (<form 
-      className="suggest" 
-      onSubmit={stopEvent(() => this.submitText(value))}
-    >
+    return (<form className="suggest" onSubmit={onSubmit}>
       <div className={['suggest__search', hintsVisible ? 'suggest__search--active' : ''].join(' ')}>
         <input
           className='suggest__search__input'

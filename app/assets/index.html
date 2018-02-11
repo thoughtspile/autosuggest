@@ -35,4 +35,73 @@
       <div id="pure-output" class="search-results"></div>
     </div>
   </div>
+  <div class="text">
+    <h1>Autosuggesting input sample implementation</h1>
+    <p>
+      Input / select crossover components cover a whole spectrum between the two:
+      on the one end, they act as a “searchable select“, where the user can only select
+      an option from the list. On the opposite side, the user is free to input whatever
+      she wishes, and the hints only provide assistance.
+    </p>
+    <p>
+      Since the intended use case was not specified, I've made up one of book search.
+      I opted for a balanced UX where the options are highly suggested, but not enforced.
+      The free-form search with no option selected is useful when the backend implements a lighter
+      search algorithm for suggestions, and employs full-text search over the books with
+      a focused search functionality.
+    </p>
+    <p>
+      The component is fairly usable for mouse-, touch- and keyboard-centered users, albeit 
+      far from perfect. Further use cases can be covered by providing grouped search — for example, 
+      a separate section of results applies to the categories, like “thriller” or “romance”. I 
+      have decided not to implement such advanced functionality, and instead focus on the 
+      core implementation.
+    </p>
+    <p>
+      <b>Note on time taken:</b>
+      The React implementation with all the UX research took about 4 hours. The standalone 
+      component took another hour, as did this accompanying text.
+    </p>
+
+    <h2>React implementation notes</h2>
+    <p>
+      <b>General disclaimer:</b> I'd much rather use a commodity react component, such as
+      <a href="https://github.com/moroshko/react-autosuggest">react-autosuggest,</a>
+      since they are more used, robust and battle-tested than a custom implementation.
+    </p>
+    <p>
+      Base Autocomplete component provides a low-level controlled API, intended for use in
+      a layered API, as shown in BookSelector. The middle-lever wrappers are best written 
+      using HOCs, such as react-redux and recompose. I have only rolled my own data management
+      layer for illustrative purposes. 
+    </p>
+    <p>
+      I'm not satisfied with the option flickering on first-time search,
+      but eliminating it would introduce high statefulness into the 
+      component, which should be done with extreme care. For the first iteration, 
+      this aspect should be fine.
+    </p>
+    <p>
+      Styles are written in SASS without CSS modules. Namespacing is achieved via BEM-style
+      naming. This approach provides easy reuse in pure-js variant and low-tech style overrides.
+    </p>
+
+    <h2>Pure JS implementation notes</h2>
+    <p>
+      I have gone a step further and not just built a pure-js version, but also one with no-js
+      fallback. While the base HTML is written inline, in production settings it would be best 
+      encapsulated into a backend-templating component (pug, handlebars, blade or whatever).
+      Overall, I have not had the time to test all the options and flows thoroughly, but the
+      basic functionality should be fine.
+    </p>
+    <p>
+      The rendering implementation is naïve and re-renders the option list on every action.
+      This stage could benefit from a standalone virtual DOM library, such as snabbdom.
+    </p>
+    <p>
+      I achieved a fair share of code parity between standalone and React implementations.
+      There is opportunity for code reuse between the two, but a generic 
+      implementation is completely aside the matter.
+    </p>
+  </div>
 </body>
