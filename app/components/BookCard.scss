@@ -1,0 +1,10 @@
+.book-card {
+  position: relative;
+  &__info{
+    font-size: 12px;
+    color: #aaa;
+  }
+  &__year {
+    float: right;
+  }
+}

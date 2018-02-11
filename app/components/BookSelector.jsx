@@ -46,7 +46,8 @@ export default class BookSelector extends React.Component {
         suggest={qs => this.search(qs)}
         onSubmit={qs => this.setState({ submitted: qs })}
         getText={describeBook}
-        Item={this.props.Item || Item}
+        Item={Item}
+        {...this.props}
       />
       {(submitted != null) && <div className="search-results">
         Search results for {submitted}
