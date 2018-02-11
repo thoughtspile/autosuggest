@@ -54,7 +54,7 @@ class Autocomplete extends React.PureComponent {
       e.preventDefault();
       e.stopPropagation();
     } else if (e.key === 'Enter') {
-      if (showHints) {
+      if (showHints && activeHintIndex >= 0) {
         this.applyHint(activeHintIndex, true);
       } else {
         this.submitText(this.props.value);
@@ -95,7 +95,7 @@ class Autocomplete extends React.PureComponent {
           value={value}
           onChange={e => suggest(e.target.value)}
           onFocus={() => this.setState({ showHints: true })}
-          onClick={() => this.setState({ showHints: true })}
+          onMouseDown={() => this.setState({ showHints: !showHints })}
           onKeyDown={e => this.handleKey(e)} 
           {...inputProps} />
         <button className="suggest__search__submit">
