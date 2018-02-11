@@ -11,9 +11,14 @@
 <body>
   <div class="showcase">
     <div id="app"></div>
-    <form method="get" action="/search">
-      <input name="q"></input>
-      <button type="submit">Search</button>
+
+    <form class="suggest" method="get" action="/search">
+      <div class="suggest__search">
+        <input class='suggest__search__input' name="q" placeholder="No-js version (backend route not implemented)" />
+        <button type="submit" class="suggest__search__submit">
+          Search
+        </button>
+      </div>
     </form>
   </div>
   <div class="description">

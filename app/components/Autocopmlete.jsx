@@ -1,28 +1,6 @@
 import React from 'react';
 import withClickOutside from 'react-click-outside';
 
-
-const Highlight = ({ text, range }) => {
-  if (!range) {
-    return <span>{text}</span>;
-  }
-  return (<span>
-    {text.slice(0, range[0])}
-    <b>{text.slice(range[0], range[1] + 1)}</b>
-    {text.slice(range[1] + 1)}
-  </span>);
-};
-
-const Item = ({ item }) => {
-  const field = key => (<Highlight
-    text={item.item[key]}
-    range={key === item.highlight.key ? item.highlight.range : null}
-  />);
-  return (<div>
-    {field('title')} by {field('author')}, {item.item.year}
-  </div>);
-};
-
 const stopEvent = fn => e => {
   e.stopPropagation();
   e.preventDefault();
@@ -40,14 +18,9 @@ class Autocomplete extends React.PureComponent {
     };
   }
 
-  disableHints() {
-    this.setState({ showHints: false });
-  }
-
   applyHint(index, submit) {
     const item = this.props.items[index];
     this.props.suggest(this.props.getText(item));
-    this.setState({ showHints: false });
     if (submit) {
       this.submitItem(item);
     }
@@ -58,31 +31,46 @@ class Autocomplete extends React.PureComponent {
   }
 
   submitItem(item) {
+    this.setState({ showHints: false });
     this.props.onSubmit(this.props.getText(item), item);
   }
 
+  submitText(text) {
+    this.setState({ showHints: false });
+    this.props.onSubmit(text, null);
+  }
+
   handleKey(e) {
-    const { activeHintIndex } = this.state;
+    const { activeHintIndex, showHints } = this.state;
     const opCount = this.props.items.length;
 
-    if (e.key === "ArrowDown") {
+    if (e.key === 'ArrowDown') {
+      this.setState({ showHints: true });
       this.activateHint(activeHintIndex + 1);
       e.stopPropagation();
-    } else if (e.key === "ArrowUp") {
+    } else if (e.key === 'ArrowUp') {
+      this.setState({ showHints: true });
       this.activateHint(activeHintIndex === -1 ? opCount - 1 : activeHintIndex - 1);
       e.preventDefault();
       e.stopPropagation();
-    } else if (e.key === "Enter") {
-      if (this.state.showHints) {
+    } else if (e.key === 'Enter') {
+      if (showHints) {
         this.applyHint(activeHintIndex, true);
       } else {
-        this.props.onSubmit(this.props.value);
+        this.submitText(this.props.value);
       }
       e.preventDefault();
       e.stopPropagation();
-    } else if (e.key === "Escape" && this.hintsActive()) {
-      this.activateHint(-1);
-      e.stopPropagation();
+    } else if (e.key === 'Escape') {
+      if (showHints) {
+        this.setState({ showHints: false });
+        e.stopPropagation();
+      }
+    } else if (e.key === 'Tab') {
+      if (showHints) {
+        this.setState({ showHints: false });
+        e.stopPropagation();
+      }
     } else {
       this.setState({ showHints: true });
     }
@@ -93,31 +81,39 @@ class Autocomplete extends React.PureComponent {
   }
 
   render() {
-    const { value, suggest, items = [], fallback, isLoading, onSubmit } = this.props;
+    const { value, suggest, items = [], fallback, inputProps, Item } = this.props;
     const { showHints, activeHintIndex } = this.state;
+    const hintsVisible = showHints && (items.length > 0 || value);
 
-    return (<form className="suggest" onSubmit={stopEvent(() => onSubmit(this.props.value, null))}>
-      <div className={['suggest__search', showHints ? 'suggest__search--active' : ''].join(' ')}>
+    return (<form 
+      className="suggest" 
+      onSubmit={stopEvent(() => this.submitText(value))}
+    >
+      <div className={['suggest__search', hintsVisible ? 'suggest__search--active' : ''].join(' ')}>
         <input
           className='suggest__search__input'
           value={value}
           onChange={e => suggest(e.target.value)}
           onFocus={() => this.setState({ showHints: true })}
-          onKeyUp={e => this.handleKey(e)} />
+          onClick={() => this.setState({ showHints: true })}
+          onKeyDown={e => this.handleKey(e)} 
+          {...inputProps} />
         <button className="suggest__search__submit">
           Search
         </button>
       </div>
-      <div className="popup__content">
-        {showHints && (<div className="suggest__content">
+      {hintsVisible && (<div className="suggest__popup">
+        <div className="suggest__content">
           <ul className="suggest__items">
-            {(items.length === 0 && !isLoading) && (<li key="$empty" className="suggest-item suggest-item--empty">
-              <EmptyWarning />
-            </li>)}
+            {(items.length === 0 && value) && (
+              <li key="$empty" className="suggest-item suggest-item--empty">
+                <EmptyWarning />
+              </li>
+            )}
             {items.map((item, i) => (
               <li
                 key={item.item.id}
-                className={["suggest-item", activeHintIndex === i ? 'suggest-item--selected' : ''].join(' ')}
+                className={['suggest-item', activeHintIndex === i ? 'suggest-item--selected' : ''].join(' ')}
                 onMouseEnter={() => this.activateHint(i)}
                 onClick={stopEvent(() => this.applyHint(i, true))}
               >
@@ -127,14 +123,17 @@ class Autocomplete extends React.PureComponent {
               </li>
             ))}
           </ul>
-        </div>)}
-      </div>
+        </div>
+      </div>)}
     </form>);
   }
 }
 
+const EMPTY_A = [];
+const EMPTY_O = {};
 Autocomplete.defaultProps = {
-  items: [],
+  items: EMPTY_A,
+  inputProps: EMPTY_O,
   value: ''
 };
 
