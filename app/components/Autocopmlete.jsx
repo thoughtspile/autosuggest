@@ -98,6 +98,8 @@ class Autocomplete extends React.PureComponent {
       <div className={['suggest__search', hintsVisible ? 'suggest__search--active' : ''].join(' ')}>
         <input
           className='suggest__search__input'
+          autoComplete="nope"
+          spellCheck="false"
           value={value}
           onChange={e => suggest(e.target.value)}
           onFocus={() => this.setState({ showHints: true })}

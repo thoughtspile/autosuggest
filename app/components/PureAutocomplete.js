@@ -17,11 +17,14 @@ class PureAutocomplete {
     this._element = _element;
     this._input = _element.getElementsByTagName('input')[0];
     this._input.autocomplete = 'off';
+    this._input.spellcheck = 'off';
     this._inputWrapper = _element.getElementsByClassName('suggest__search')[0];
 
     this._element.addEventListener('submit', stopEvent(() => this.submitText(this._input.value)));
     this._input.addEventListener('focus', () => this.setState({ showHints: true }));
-    this._input.addEventListener('mousedown', () => this.setState({ showHints: !this.state.showHints }));
+    this._input.addEventListener('mousedown', (e) => {
+      this.setState({ showHints: !this.state.showHints });
+    });
     this._input.addEventListener('keydown', (e) => this.handleKey(e));
     this._input.addEventListener('input', e => this.handleChange(e.target.value));
 
@@ -140,7 +143,7 @@ class PureAutocomplete {
           el.className += ' suggest-item--selected';
         }
         el.addEventListener('mouseenter', () => this.activateHint(i));
-        el.addEventListener('mousedown', () => this.applyHint(i, true));
+        el.addEventListener('mouseup', () => this.applyHint(i, true));
         el.innerHTML = `<span class="suggest-item__text">
           ${this.props.itemTemplate(item)}
         </span>`;
