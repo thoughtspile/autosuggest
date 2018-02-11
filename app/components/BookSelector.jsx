@@ -38,10 +38,18 @@ export default class BookSelector extends React.Component {
   
   render() {
     const { search, submitted } = this.state;
+    const { fallback } = this.props;
+    
+    const found = suggestService.cache[search];
+    const useFallback = fallback && (!found || found.length === 0);
+    const itemsTitle = useFallback ? 'Nothing found, try our suggestions:' : null;
+    const items = useFallback ? suggestService.popular : found;
+
     return <div className="showcase-block">
       <Autocomplete
         value={search}
-        items={suggestService.cache[search]}
+        items={items}
+        itemsTitle={itemsTitle}
         loading={suggestService.loading[search]}
         suggest={qs => this.search(qs)}
         onSubmit={qs => this.setState({ submitted: qs })}

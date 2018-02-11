@@ -81,7 +81,7 @@ class Autocomplete extends React.PureComponent {
   }
 
   render() {
-    const { value, suggest, items = [], fallback, inputProps, Item } = this.props;
+    const { value, suggest, items = [], fallback, inputProps, Item, itemsTitle } = this.props;
     const { showHints, activeHintIndex } = this.state;
     const hintsVisible = showHints && (items.length > 0 || value);
 
@@ -108,6 +108,11 @@ class Autocomplete extends React.PureComponent {
             {(items.length === 0 && value) && (
               <li key="$empty" className="suggest-item suggest-item--empty">
                 <EmptyWarning />
+              </li>
+            )}
+            {(itemsTitle) && (
+              <li key="$title" className="suggest-item suggest-item--empty">
+                {itemsTitle}
               </li>
             )}
             {items.map((item, i) => (

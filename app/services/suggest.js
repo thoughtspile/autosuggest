@@ -33,7 +33,9 @@ const service = {
       'title'
     ]
   }),
-  popular: db.filter(() => Math.random() < .2),
+  popular: db
+    .filter(() => Math.random() < .2)
+    .map(item => ({ item, highlight: { key: '', range: [] } })),
   cache: {},
   loading: {}
 };

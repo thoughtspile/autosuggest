@@ -49,7 +49,7 @@ $btn: #ff6868;
             left: 0;
             width: 100%;
             padding: 10px;
-            padding-right: 50px;
+            padding-right: 75px;
             bottom: 0;
         }
         &__submit {
@@ -89,6 +89,12 @@ $btn: #ff6868;
         background-color: transparent !important;
         color: #aaa;
         text-align: center;
+        cursor: default;
+    }
+
+    &--inactive {
+        background-color: transparent !important;
+        color: #888;
         cursor: default;
     }
 

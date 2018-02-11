@@ -15,11 +15,15 @@ export default class App extends React.Component {
   render() {
     return <div>
       <BookSelector 
-        inputProps={{ placeholder: 'Plain book finder — who\'s S...h...a...' }}
+        inputProps={{ placeholder: 'Plain book finder — who\'s N...i...k...o...' }}
       />
       <BookSelector
         inputProps={{ placeholder: 'Custom hint layout — find Fyodor' }} 
         Item={BookCard}
+      />
+      <BookSelector
+        inputProps={{ placeholder: 'Fallback to suggested reading — try Piotr' }}
+        fallback
       />
     </div>;
   }
