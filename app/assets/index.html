@@ -12,15 +12,27 @@
   <div class="showcase">
     <div id="app"></div>
 
-    <form class="suggest" method="get" action="/search">
-      <div class="suggest__search">
-        <input class='suggest__search__input' name="q" placeholder="No-js version (backend route not implemented)" />
-        <button type="submit" class="suggest__search__submit">
-          Search
-        </button>
-      </div>
-    </form>
-  </div>
-  <div class="description">
+    <div class="showcase-block">
+      <form class="suggest" method="get" action="/search">
+        <div class="suggest__search">
+          <input class='suggest__search__input' name="q" placeholder="No-js version (backend route not implemented)" />
+          <button type="submit" class="suggest__search__submit">
+            Search
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="showcase-block">
+      <form id="pure-form" class="suggest" method="get" action="/search">
+        <div class="suggest__search">
+          <input class='suggest__search__input' name="q" placeholder="Pure js version — why not Homer?" />
+          <button type="submit" class="suggest__search__submit">
+            Search
+          </button>
+        </div>
+      </form>
+      <div id="pure-output" class="search-results"></div>
+    </div>
   </div>
 </body>
